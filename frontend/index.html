@@ -47,6 +47,10 @@ body{
     border-radius:8px;
 }
 
+button{
+    cursor:pointer;
+}
+
 .auth-container button,
 .admin-box button,
 .product-card button,
@@ -126,7 +130,6 @@ nav{
     border:none;
     padding:10px 15px;
     border-radius:8px;
-    cursor:pointer;
 }
 
 .cart-badge{
@@ -223,6 +226,13 @@ nav{
     color:white;
 }
 
+.delete-btn,
+.remove-btn{
+    background:red !important;
+    color:white !important;
+    margin-top:10px;
+}
+
 footer{
     background:#131921;
     color:white;
@@ -245,7 +255,6 @@ footer{
 
 <body>
 
-<!-- LOGIN / REGISTER PAGE -->
 <div id="authPage">
 
     <div class="auth-container" id="loginBox">
@@ -279,7 +288,6 @@ footer{
 
 </div>
 
-<!-- STORE PAGE -->
 <div id="storePage">
 
 <nav>
@@ -302,7 +310,7 @@ footer{
     <p>Amazon-style Full Stack E-Commerce Project</p>
 </section>
 
-<section class="section" id="adminSection">
+<section class="section" id="adminSection" style="display:none;">
     <h2 class="section-title">Admin Panel - Add Product</h2>
 
     <div class="admin-box">
@@ -336,6 +344,7 @@ footer{
 
 <script>
 const BASE_URL = "https://codealpha-ecommerce-jkk0.onrender.com";
+const ADMIN_EMAIL = "mohamedkasim5303@gmail.com";
 
 let allProducts = [];
 
@@ -382,7 +391,7 @@ async function loginUser(){
     const data = await res.text();
 
     if(data === "Login Success"){
-        localStorage.setItem("user",email);
+        localStorage.setItem("user", email);
         openStore();
     }else{
         alert("Invalid Login");
@@ -393,8 +402,15 @@ function openStore(){
     document.getElementById("authPage").style.display = "none";
     document.getElementById("storePage").style.display = "block";
 
-    document.getElementById("welcomeUser").innerText =
-        localStorage.getItem("user");
+    const user = localStorage.getItem("user");
+
+    document.getElementById("welcomeUser").innerText = user;
+
+    if(user === ADMIN_EMAIL){
+        document.getElementById("adminSection").style.display = "block";
+    }else{
+        document.getElementById("adminSection").style.display = "none";
+    }
 
     loadProducts();
     loadCart();
@@ -415,17 +431,10 @@ async function addProduct(){
     const res = await fetch(`${BASE_URL}/add-product`,{
         method:"POST",
         headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({
-            name,
-            price,
-            image,
-            category,
-            description
-        })
+        body:JSON.stringify({name,price,image,category,description})
     });
 
     const data = await res.text();
-
     alert(data);
 
     document.getElementById("adminName").value = "";
@@ -442,12 +451,13 @@ async function loadProducts(){
     const products = await res.json();
 
     allProducts = products;
-
     displayProducts(products);
 }
 
 function displayProducts(products){
     const productDiv = document.getElementById("products");
+    const isAdmin = localStorage.getItem("user") === ADMIN_EMAIL;
+
     productDiv.innerHTML = "";
 
     products.forEach(product => {
@@ -462,9 +472,33 @@ function displayProducts(products){
                 <button onclick="addToCart('${product._id}','${product.name}',${product.price})">
                     Add To Cart
                 </button>
+
+                ${
+                    isAdmin
+                    ? `<button class="delete-btn" onclick="deleteProduct('${product._id}')">
+                        Delete Product
+                       </button>`
+                    : ""
+                }
             </div>
         `;
     });
+}
+
+async function deleteProduct(id){
+    const confirmDelete = confirm("Are you sure you want to delete this product?");
+
+    if(!confirmDelete) return;
+
+    const res = await fetch(`${BASE_URL}/delete-product/${id}`,{
+        method:"DELETE"
+    });
+
+    const data = await res.text();
+
+    alert(data);
+
+    loadProducts();
 }
 
 function searchProducts(){
@@ -505,6 +539,7 @@ async function loadCart(){
     cartDiv.innerHTML = "";
 
     let count = 0;
+    let total = 0;
 
     if(!cart.items || cart.items.length === 0){
         cartDiv.innerHTML = "<h3>Cart Empty</h3>";
@@ -514,17 +549,41 @@ async function loadCart(){
 
     cart.items.forEach(item => {
         count += item.quantity;
+        total += item.price * item.quantity;
 
         cartDiv.innerHTML += `
             <div class="cart-item">
                 <h3>${item.name}</h3>
                 <p>Price: ₹${item.price}</p>
                 <p>Quantity: ${item.quantity}</p>
+                <p>Subtotal: ₹${item.price * item.quantity}</p>
+
+                <button class="remove-btn" onclick="removeFromCart('${item.productId}')">
+                    Remove
+                </button>
             </div>
         `;
     });
 
+    cartDiv.innerHTML += `<h2>Total Amount: ₹${total}</h2>`;
+
     document.getElementById("cartCount").innerText = count;
+}
+
+async function removeFromCart(productId){
+    const user = localStorage.getItem("user");
+
+    const res = await fetch(`${BASE_URL}/cart/remove`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({userId:user, productId})
+    });
+
+    const data = await res.text();
+
+    alert(data);
+
+    loadCart();
 }
 
 async function placeOrder(){
@@ -537,7 +596,9 @@ async function placeOrder(){
     });
 
     const data = await res.text();
+
     alert(data);
+
     loadCart();
 }
 </script>

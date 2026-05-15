@@ -11,12 +11,9 @@ const Order = require('./models/Order');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-console.log("MONGO_URI =", process.env.MONGO_URI);
-
-// DB CONNECT
 mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB Connected"))
 .catch(err => console.log(err));
@@ -25,83 +22,130 @@ app.get('/', (req, res) => {
     res.send("E-commerce API Running");
 });
 
-
-// ================= USER =================
+// REGISTER
 app.post('/register', async (req, res) => {
     try {
+        const existingUser = await User.findOne({ email: req.body.email });
+
+        if (existingUser) {
+            return res.send("User already exists");
+        }
+
         const user = new User(req.body);
         await user.save();
+
         res.send("User Registered");
-    } catch {
-        res.send("Error");
+    } catch (err) {
+        res.status(500).send("Error registering user");
     }
 });
 
+// LOGIN
 app.post('/login', async (req, res) => {
-    const user = await User.findOne(req.body);
-    if (!user) return res.send("Invalid");
-    res.send("Login Success");
+    try {
+        const user = await User.findOne({
+            email: req.body.email,
+            password: req.body.password
+        });
+
+        if (!user) return res.send("Invalid");
+
+        res.send("Login Success");
+    } catch (err) {
+        res.status(500).send("Login Error");
+    }
 });
 
-
-// ================= PRODUCTS =================
+// ADD PRODUCT
 app.post('/add-product', async (req, res) => {
-    const product = new Product(req.body);
-    await product.save();
-    res.send("Product Added");
+    try {
+        const product = new Product(req.body);
+        await product.save();
+
+        res.send("Product Added");
+    } catch (err) {
+        res.status(500).send("Error adding product");
+    }
 });
 
+// GET PRODUCTS
 app.get('/products', async (req, res) => {
-    const data = await Product.find();
-    res.json(data);
+    const products = await Product.find();
+    res.json(products);
 });
 
+// DELETE PRODUCT
+app.delete('/delete-product/:id', async (req, res) => {
+    try {
+        await Product.findByIdAndDelete(req.params.id);
+        res.send("Product Deleted");
+    } catch (err) {
+        res.status(500).send("Error deleting product");
+    }
+});
 
-// ================= CART =================
+// ADD TO CART
 app.post('/cart/add', async (req, res) => {
     const { userId, productId, name, price } = req.body;
 
     let cart = await Cart.findOne({ userId });
 
-    if (!cart) cart = new Cart({ userId, items: [] });
+    if (!cart) {
+        cart = new Cart({ userId, items: [] });
+    }
 
     const item = cart.items.find(i => i.productId === productId);
 
-    if (item) item.quantity++;
-    else cart.items.push({ productId, name, price, quantity: 1 });
+    if (item) {
+        item.quantity += 1;
+    } else {
+        cart.items.push({ productId, name, price, quantity: 1 });
+    }
 
     await cart.save();
+
     res.send("Added to cart");
 });
 
+// GET CART
 app.get('/cart/:userId', async (req, res) => {
     const cart = await Cart.findOne({ userId: req.params.userId });
+
     res.json(cart || { items: [] });
 });
 
+// REMOVE FROM CART
 app.post('/cart/remove', async (req, res) => {
     const { userId, productId } = req.body;
 
     const cart = await Cart.findOne({ userId });
-    if (!cart) return res.send("No cart");
 
-    cart.items = cart.items.filter(i => i.productId !== productId);
+    if (!cart) {
+        return res.send("Cart not found");
+    }
+
+    cart.items = cart.items.filter(item => item.productId !== productId);
+
     await cart.save();
 
-    res.send("Removed");
+    res.send("Item Removed");
 });
 
-
-// ================= ORDERS =================
+// PLACE ORDER
 app.post('/order/place', async (req, res) => {
     const { userId } = req.body;
 
     const cart = await Cart.findOne({ userId });
-    if (!cart || cart.items.length === 0)
+
+    if (!cart || cart.items.length === 0) {
         return res.send("Cart empty");
+    }
 
     let total = 0;
-    cart.items.forEach(i => total += i.price * i.quantity);
+
+    cart.items.forEach(item => {
+        total += item.price * item.quantity;
+    });
 
     const order = new Order({
         userId,
@@ -117,9 +161,12 @@ app.post('/order/place', async (req, res) => {
     res.send("Order Placed");
 });
 
+// GET ORDERS
 app.get('/order/:userId', async (req, res) => {
     const orders = await Order.find({ userId: req.params.userId });
     res.json(orders);
 });
 
-app.listen(5000, () => console.log("Server running on 5000"));
+app.listen(5000, () => {
+    console.log("Server running on 5000");
+});
