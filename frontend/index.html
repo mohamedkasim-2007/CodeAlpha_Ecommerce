@@ -3,8 +3,53 @@
 <head>
     <title>E-Commerce Store</title>
 
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body{
+            font-family: Arial;
+            padding:20px;
+            background:#f5f5f5;
+        }
+
+        h1{
+            color:#333;
+        }
+
+        #products{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+            gap:20px;
+            margin-top:20px;
+        }
+
+        .card{
+            background:white;
+            padding:15px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .card img{
+            width:100%;
+            border-radius:10px;
+        }
+
+        button{
+            background:black;
+            color:white;
+            border:none;
+            padding:10px;
+            cursor:pointer;
+            width:100%;
+            margin-top:10px;
+        }
+
+        a{
+            text-decoration:none;
+            color:blue;
+        }
+    </style>
 </head>
+
 <body>
 
     <h1>My Products</h1>
@@ -13,7 +58,70 @@
 
     <div id="products"></div>
 
-    <script src="script.js"></script>
+    <script>
+
+        async function loadProducts(){
+
+            const response = await fetch(
+                "https://codealpha-ecommerce-jkk0.onrender.com/products"
+            );
+
+            const products = await response.json();
+
+            const productDiv = document.getElementById("products");
+
+            productDiv.innerHTML = "";
+
+            products.forEach(product => {
+
+                productDiv.innerHTML += `
+                
+                <div class="card">
+
+                    <img src="${product.image}" />
+
+                    <h2>${product.name}</h2>
+
+                    <p>₹${product.price}</p>
+
+                    <p>${product.description}</p>
+
+                    <button onclick="addToCart('${product._id}','${product.name}',${product.price})">
+                        Add To Cart
+                    </button>
+
+                </div>
+
+                `;
+            });
+
+        }
+
+        async function addToCart(id,name,price){
+
+            await fetch(
+                "https://codealpha-ecommerce-jkk0.onrender.com/cart/add",
+                {
+                    method:"POST",
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body:JSON.stringify({
+                        userId:"user1",
+                        productId:id,
+                        name:name,
+                        price:price
+                    })
+                }
+            );
+
+            alert("Added To Cart");
+
+        }
+
+        loadProducts();
+
+    </script>
 
 </body>
 </html>
