@@ -16,7 +16,7 @@
 
 let userId = localStorage.getItem("user");
 
-fetch("http://localhost:5000/cart/"+userId)
+fetch("https://codealpha-ecommerce-jkk0.onrender.com/cart/"+userId)
 .then(r=>r.json())
 .then(data=>{
 let html="";
