@@ -11,6 +11,7 @@
     padding:0;
     box-sizing:border-box;
     font-family:Arial, Helvetica, sans-serif;
+    scroll-behavior:smooth;
 }
 
 body{
@@ -172,7 +173,8 @@ nav{
 }
 
 .product-card:hover{
-    transform:translateY(-7px);
+    transform:translateY(-10px) scale(1.02);
+    box-shadow:0 10px 20px rgba(0,0,0,0.2);
 }
 
 .product-card img{
@@ -191,6 +193,12 @@ nav{
     font-size:22px;
     font-weight:bold;
     margin:10px 0;
+}
+
+.buy-btn{
+    margin-top:10px;
+    background:green !important;
+    color:white;
 }
 
 .cart-item{
@@ -403,6 +411,10 @@ function displayProducts(products){
                 <button onclick="addToCart('${product._id}','${product.name}',${product.price})">
                     Add To Cart
                 </button>
+
+                <button class="buy-btn" onclick="buyNow('${product._id}','${product.name}',${product.price})">
+                    Buy Now
+                </button>
             </div>
         `;
     });
@@ -433,6 +445,18 @@ async function addToCart(id,name,price){
 
     alert("Added To Cart");
     loadCart();
+}
+
+async function buyNow(id,name,price){
+    await addToCart(id,name,price);
+
+    document
+        .querySelector("#cartItems")
+        .scrollIntoView({
+            behavior:"smooth"
+        });
+
+    alert("Product added. Complete your order below.");
 }
 
 async function loadCart(){
