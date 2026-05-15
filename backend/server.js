@@ -45,6 +45,15 @@ app.get('/products', async (req, res) => {
     res.json(products);
 });
 
+app.delete('/delete-product/:id', async (req, res) => {
+    try {
+        await Product.findByIdAndDelete(req.params.id);
+        res.send("Product Deleted");
+    } catch (err) {
+        res.status(500).send("Error deleting product");
+    }
+});
+
 app.post('/cart/add', async (req, res) => {
     const { userId, productId, name, price } = req.body;
 
