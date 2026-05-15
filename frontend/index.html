@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Amazingg Store</title>
 
     <style>
@@ -15,127 +15,195 @@
         }
 
         body{
-            background:#f4f4f4;
+            background:#eaeded;
         }
 
+        /* NAVBAR */
+
         nav{
-            background:black;
+            background:#131921;
             color:white;
-            padding:20px;
+            padding:15px 30px;
             display:flex;
             justify-content:space-between;
             align-items:center;
+            flex-wrap:wrap;
+            gap:20px;
+            position:sticky;
+            top:0;
+            z-index:1000;
         }
 
-        nav h1{
-            font-size:28px;
+        .logo{
+            font-size:32px;
+            font-weight:bold;
+            color:#ff9900;
         }
 
-        nav a{
-            color:white;
-            text-decoration:none;
-            margin-left:20px;
+        .search-box{
+            flex:1;
+            display:flex;
+            max-width:700px;
+        }
+
+        .search-box input{
+            flex:1;
+            padding:12px;
+            border:none;
+            outline:none;
+            font-size:16px;
+            border-radius:5px 0 0 5px;
+        }
+
+        .search-box button{
+            width:70px;
+            border:none;
+            background:#febd69;
+            cursor:pointer;
+            border-radius:0 5px 5px 0;
             font-size:18px;
         }
 
-        .hero{
-            background:linear-gradient(to right,#111,#444);
-            color:white;
-            padding:80px 20px;
-            text-align:center;
+        .nav-links{
+            display:flex;
+            gap:20px;
+            align-items:center;
         }
 
-        .hero h2{
-            font-size:45px;
+        .nav-links a{
+            color:white;
+            text-decoration:none;
+            font-size:18px;
+        }
+
+        .cart-badge{
+            background:red;
+            padding:4px 10px;
+            border-radius:50px;
+            font-size:14px;
+        }
+
+        /* HERO */
+
+        .hero{
+            height:450px;
+            background:linear-gradient(to right,#131921,#37475a);
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            text-align:center;
+            color:white;
+            padding:20px;
+        }
+
+        .hero-content h1{
+            font-size:60px;
             margin-bottom:20px;
         }
 
-        .hero p{
-            font-size:20px;
+        .hero-content p{
+            font-size:24px;
+            margin-bottom:30px;
         }
 
-        .section{
-            padding:40px 20px;
+        .hero-content button{
+            padding:15px 35px;
+            border:none;
+            background:#ff9900;
+            color:black;
+            font-size:18px;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:bold;
+        }
+
+        /* PRODUCTS */
+
+        .products-section{
+            padding:50px 30px;
         }
 
         .section-title{
-            font-size:35px;
-            margin-bottom:30px;
-            text-align:center;
+            font-size:40px;
+            margin-bottom:40px;
+            color:#111;
         }
 
         #products{
             display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-            gap:25px;
+            grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+            gap:30px;
         }
 
-        .card{
+        .product-card{
             background:white;
-            border-radius:15px;
             padding:20px;
-            box-shadow:0 0 10px rgba(0,0,0,0.1);
+            border-radius:15px;
             transition:0.3s;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
         }
 
-        .card:hover{
-            transform:translateY(-5px);
+        .product-card:hover{
+            transform:translateY(-8px);
         }
 
-        .card img{
+        .product-card img{
             width:100%;
-            height:220px;
+            height:250px;
             object-fit:cover;
             border-radius:10px;
         }
 
-        .card h3{
+        .product-card h3{
             margin-top:15px;
             font-size:24px;
         }
 
-        .card p{
+        .rating{
+            color:orange;
             margin-top:10px;
         }
 
         .price{
             color:green;
-            font-size:22px;
+            font-size:24px;
             font-weight:bold;
+            margin-top:10px;
         }
 
-        button{
-            width:100%;
-            padding:12px;
-            margin-top:15px;
-            border:none;
-            background:black;
-            color:white;
+        .old-price{
+            text-decoration:line-through;
+            color:gray;
+            margin-left:10px;
             font-size:16px;
-            cursor:pointer;
-            border-radius:8px;
         }
 
-        button:hover{
-            background:#333;
+        .discount{
+            color:red;
+            font-weight:bold;
+            margin-top:10px;
         }
 
-        .form-container{
-            max-width:450px;
-            margin:auto;
-            background:white;
-            padding:30px;
-            border-radius:15px;
-            box-shadow:0 0 10px rgba(0,0,0,0.1);
-            margin-bottom:40px;
-        }
-
-        .form-container input{
+        .product-card button{
             width:100%;
+            margin-top:20px;
             padding:12px;
-            margin-top:15px;
-            border:1px solid #ccc;
+            border:none;
+            background:#131921;
+            color:white;
             border-radius:8px;
+            cursor:pointer;
+            font-size:16px;
+        }
+
+        .product-card button:hover{
+            background:#232f3e;
+        }
+
+        /* CART */
+
+        .cart-section{
+            padding:50px 30px;
         }
 
         #cartItems{
@@ -145,16 +213,91 @@
         .cart-item{
             background:white;
             padding:20px;
+            margin-bottom:20px;
             border-radius:10px;
-            margin-bottom:15px;
         }
 
+        .place-order-btn{
+            width:300px;
+            padding:15px;
+            border:none;
+            background:green;
+            color:white;
+            font-size:18px;
+            border-radius:10px;
+            cursor:pointer;
+            margin-top:20px;
+        }
+
+        /* LOGIN REGISTER */
+
+        .auth-section{
+            padding:50px 30px;
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+            gap:30px;
+        }
+
+        .auth-box{
+            background:white;
+            padding:30px;
+            border-radius:15px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .auth-box h2{
+            margin-bottom:20px;
+        }
+
+        .auth-box input{
+            width:100%;
+            padding:12px;
+            margin-bottom:15px;
+            border:1px solid #ccc;
+            border-radius:8px;
+        }
+
+        .auth-box button{
+            width:100%;
+            padding:12px;
+            border:none;
+            background:#ff9900;
+            font-size:16px;
+            font-weight:bold;
+            border-radius:8px;
+            cursor:pointer;
+        }
+
+        /* FOOTER */
+
         footer{
-            background:black;
+            background:#131921;
             color:white;
             text-align:center;
-            padding:20px;
+            padding:30px;
             margin-top:50px;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width:768px){
+
+            .hero-content h1{
+                font-size:40px;
+            }
+
+            .hero-content p{
+                font-size:18px;
+            }
+
+            nav{
+                flex-direction:column;
+            }
+
+            .search-box{
+                width:100%;
+            }
+
         }
 
     </style>
@@ -162,44 +305,88 @@
 </head>
 <body>
 
+    <!-- NAVBAR -->
+
     <nav>
 
-        <h1>Amazingg Store</h1>
+        <div class="logo">Amazingg Store</div>
 
-        <div>
+        <div class="search-box">
+
+            <input 
+                type="text" 
+                placeholder="Search products..."
+                id="searchInput"
+                onkeyup="searchProducts()"
+            >
+
+            <button>🔍</button>
+
+        </div>
+
+        <div class="nav-links">
+
             <a href="#productsSection">Products</a>
-            <a href="#registerSection">Register</a>
-            <a href="#loginSection">Login</a>
             <a href="#cartSection">Cart</a>
+            <a href="#authSection">Login</a>
+
+            <span class="cart-badge" id="cartCount">0</span>
+
         </div>
 
     </nav>
 
+    <!-- HERO -->
+
     <section class="hero">
 
-        <h2>Welcome To Amazingg Store</h2>
+        <div class="hero-content">
 
-        <p>Professional Full Stack E-Commerce Website</p>
+            <h1>Welcome To Amazingg Store</h1>
+
+            <p>India's Professional Full Stack Shopping Website</p>
+
+            <button onclick="scrollToProducts()">
+                Shop Now
+            </button>
+
+        </div>
 
     </section>
 
     <!-- PRODUCTS -->
 
-    <section class="section" id="productsSection">
+    <section class="products-section" id="productsSection">
 
-        <h2 class="section-title">Products</h2>
+        <h2 class="section-title">Trending Products</h2>
 
         <div id="products"></div>
 
     </section>
 
-    <!-- REGISTER -->
+    <!-- CART -->
 
-    <section class="section" id="registerSection">
+    <section class="cart-section" id="cartSection">
 
-        <h2 class="section-title">Register</h2>
+        <h2 class="section-title">Your Cart</h2>
 
-        <div class="form-container">
+        <div id="cartItems"></div>
+
+        <button class="place-order-btn" onclick="placeOrder()">
+            Place Order
+        </button>
+
+    </section>
+
+    <!-- AUTH -->
+
+    <section class="auth-section" id="authSection">
+
+        <!-- REGISTER -->
+
+        <div class="auth-box">
+
+            <h2>Register</h2>
 
             <input type="text" id="regName" placeholder="Enter Name">
 
@@ -207,53 +394,45 @@
 
             <input type="password" id="regPassword" placeholder="Enter Password">
 
-            <button onclick="registerUser()">Register</button>
+            <button onclick="registerUser()">
+                Register
+            </button>
 
         </div>
 
-    </section>
+        <!-- LOGIN -->
 
-    <!-- LOGIN -->
+        <div class="auth-box">
 
-    <section class="section" id="loginSection">
-
-        <h2 class="section-title">Login</h2>
-
-        <div class="form-container">
+            <h2>Login</h2>
 
             <input type="email" id="loginEmail" placeholder="Enter Email">
 
             <input type="password" id="loginPassword" placeholder="Enter Password">
 
-            <button onclick="loginUser()">Login</button>
+            <button onclick="loginUser()">
+                Login
+            </button>
 
         </div>
 
     </section>
 
-    <!-- CART -->
-
-    <section class="section" id="cartSection">
-
-        <h2 class="section-title">Cart</h2>
-
-        <div id="cartItems"></div>
-
-        <div style="max-width:300px;margin:auto;">
-            <button onclick="placeOrder()">Place Order</button>
-        </div>
-
-    </section>
+    <!-- FOOTER -->
 
     <footer>
 
-        <h3>© 2026 Amazingg Store | Full Stack Project</h3>
+        <h2>Amazingg Store</h2>
+
+        <p>Full Stack E-Commerce Project using HTML, CSS, JavaScript, Node.js, Express.js and MongoDB</p>
 
     </footer>
 
     <script>
 
         const BASE_URL = "https://codealpha-ecommerce-jkk0.onrender.com";
+
+        let allProducts = [];
 
         // LOAD PRODUCTS
 
@@ -263,6 +442,16 @@
 
             const products = await response.json();
 
+            allProducts = products;
+
+            displayProducts(products);
+
+        }
+
+        // DISPLAY PRODUCTS
+
+        function displayProducts(products){
+
             const productDiv = document.getElementById("products");
 
             productDiv.innerHTML = "";
@@ -271,13 +460,26 @@
 
                 productDiv.innerHTML += `
 
-                    <div class="card">
+                    <div class="product-card">
 
                         <img src="${product.image}" />
 
                         <h3>${product.name}</h3>
 
-                        <p class="price">₹${product.price}</p>
+                        <div class="rating">
+                            ⭐⭐⭐⭐☆
+                        </div>
+
+                        <div class="price">
+                            ₹${product.price}
+                            <span class="old-price">
+                                ₹${product.price + 1000}
+                            </span>
+                        </div>
+
+                        <div class="discount">
+                            40% OFF
+                        </div>
 
                         <p>${product.description}</p>
 
@@ -290,6 +492,128 @@
                 `;
 
             });
+
+        }
+
+        // SEARCH PRODUCTS
+
+        function searchProducts(){
+
+            const value = document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+            const filtered = allProducts.filter(product =>
+                product.name.toLowerCase().includes(value)
+            );
+
+            displayProducts(filtered);
+
+        }
+
+        // ADD TO CART
+
+        async function addToCart(id,name,price){
+
+            await fetch(`${BASE_URL}/cart/add`,{
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+
+                    userId:"user1",
+                    productId:id,
+                    name:name,
+                    price:price
+
+                })
+
+            });
+
+            alert("Added To Cart");
+
+            loadCart();
+
+        }
+
+        // LOAD CART
+
+        async function loadCart(){
+
+            const response = await fetch(`${BASE_URL}/cart/user1`);
+
+            const cart = await response.json();
+
+            const cartDiv = document.getElementById("cartItems");
+
+            cartDiv.innerHTML = "";
+
+            let count = 0;
+
+            if(!cart.items || cart.items.length === 0){
+
+                cartDiv.innerHTML = "<h3>Cart Empty</h3>";
+
+                document.getElementById("cartCount").innerText = 0;
+
+                return;
+
+            }
+
+            cart.items.forEach(item => {
+
+                count += item.quantity;
+
+                cartDiv.innerHTML += `
+
+                    <div class="cart-item">
+
+                        <h3>${item.name}</h3>
+
+                        <p>Price: ₹${item.price}</p>
+
+                        <p>Quantity: ${item.quantity}</p>
+
+                    </div>
+
+                `;
+
+            });
+
+            document.getElementById("cartCount").innerText = count;
+
+        }
+
+        // PLACE ORDER
+
+        async function placeOrder(){
+
+            const response = await fetch(`${BASE_URL}/order/place`,{
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+
+                    userId:"user1"
+
+                })
+
+            });
+
+            const data = await response.text();
+
+            alert(data);
+
+            loadCart();
 
         }
 
@@ -351,100 +675,15 @@
 
         }
 
-        // ADD TO CART
+        // SCROLL
 
-        async function addToCart(id,name,price){
+        function scrollToProducts(){
 
-            await fetch(`${BASE_URL}/cart/add`,{
-
-                method:"POST",
-
-                headers:{
-                    "Content-Type":"application/json"
-                },
-
-                body:JSON.stringify({
-
-                    userId:"user1",
-                    productId:id,
-                    name:name,
-                    price:price
-
-                })
-
-            });
-
-            alert("Added To Cart");
-
-            loadCart();
-
-        }
-
-        // LOAD CART
-
-        async function loadCart(){
-
-            const response = await fetch(`${BASE_URL}/cart/user1`);
-
-            const cart = await response.json();
-
-            const cartDiv = document.getElementById("cartItems");
-
-            cartDiv.innerHTML = "";
-
-            if(!cart.items || cart.items.length === 0){
-
-                cartDiv.innerHTML = "<h3 style='text-align:center'>Cart Empty</h3>";
-
-                return;
-
-            }
-
-            cart.items.forEach(item => {
-
-                cartDiv.innerHTML += `
-
-                    <div class="cart-item">
-
-                        <h3>${item.name}</h3>
-
-                        <p>Price: ₹${item.price}</p>
-
-                        <p>Quantity: ${item.quantity}</p>
-
-                    </div>
-
-                `;
-
-            });
-
-        }
-
-        // PLACE ORDER
-
-        async function placeOrder(){
-
-            const response = await fetch(`${BASE_URL}/order/place`,{
-
-                method:"POST",
-
-                headers:{
-                    "Content-Type":"application/json"
-                },
-
-                body:JSON.stringify({
-
-                    userId:"user1"
-
-                })
-
-            });
-
-            const data = await response.text();
-
-            alert(data);
-
-            loadCart();
+            document
+                .getElementById("productsSection")
+                .scrollIntoView({
+                    behavior:"smooth"
+                });
 
         }
 
