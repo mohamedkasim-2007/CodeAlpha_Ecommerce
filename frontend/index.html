@@ -63,6 +63,24 @@ button{
     font-weight:bold;
 }
 
+.buy-btn{
+    margin-top:10px;
+    background:green !important;
+    color:white;
+}
+
+.delete-btn{
+    margin-top:10px;
+    background:red !important;
+    color:white;
+}
+
+.remove-btn{
+    margin-top:10px;
+    background:red !important;
+    color:white;
+}
+
 .switch-text{
     text-align:center;
     margin-top:15px;
@@ -195,18 +213,6 @@ nav{
     margin:10px 0;
 }
 
-.buy-btn{
-    margin-top:10px;
-    background:green !important;
-    color:white;
-}
-
-.delete-btn{
-    margin-top:10px;
-    background:red !important;
-    color:white;
-}
-
 .cart-item{
     background:white;
     padding:18px;
@@ -218,12 +224,6 @@ nav{
     max-width:300px;
     background:green;
     color:white;
-}
-
-.remove-btn{
-    background:red !important;
-    color:white !important;
-    margin-top:10px;
 }
 
 footer{
@@ -460,11 +460,9 @@ async function addToCart(id,name,price){
 async function buyNow(id,name,price){
     await addToCart(id,name,price);
 
-    document
-        .querySelector("#cartItems")
-        .scrollIntoView({
-            behavior:"smooth"
-        });
+    document.querySelector("#cartItems").scrollIntoView({
+        behavior:"smooth"
+    });
 
     alert("Product added. Complete your order below.");
 }
